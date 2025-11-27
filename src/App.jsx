@@ -59,6 +59,7 @@ import {
 } from 'lucide-react';
 
 // --- Firebase Configuration & Init ---
+// SUAS CHAVES REAIS JÁ CONFIGURADAS:
 const firebaseConfig = {
   apiKey: "AIzaSyAPAVOZdca61pTSoujke8c5UBTYuAByILs",
   authDomain: "fju-sports-app.firebaseapp.com",
@@ -396,6 +397,7 @@ function SocialCardModal({ isOpen, onClose, matchData, championshipName }) {
             </div>
         </div>
 
+        {/* Footer Action */}
         <div className="w-full">
           <button onClick={onClose} className="w-full py-3 bg-slate-100 text-slate-900 rounded-lg font-bold text-sm hover:bg-white transition-colors shadow-lg">
             Fechar
@@ -690,7 +692,7 @@ function ShareModal({ isOpen, onClose, championshipName }) {
 
 // --- Components ---
 
-function Header({ user, setView, onOpenRules, isReadOnly, onFinish, isFinished, isLocked, onToggleLock }) {
+function Header({ user, setView, onOpenRules, isReadOnly, onFinish, isFinished, isLocked, onToggleLock, onShare }) {
   return (
     <div className="relative overflow-hidden shadow-xl print:hidden">
       <div className={`absolute inset-0 bg-gradient-to-r from-[#003082] via-[#0047BB] to-[#E30613]`}></div>
@@ -712,6 +714,17 @@ function Header({ user, setView, onOpenRules, isReadOnly, onFinish, isFinished, 
         </div>
         
         <div className="flex items-center gap-3">
+          {/* RE-ADDED SHARE BUTTON HERE */}
+          {onShare && (
+            <button 
+              onClick={onShare}
+              className="flex items-center gap-1 text-xs font-bold text-white bg-white/10 hover:bg-white/20 px-3 py-2 rounded uppercase tracking-wide border border-white/10 transition-colors"
+              title="Compartilhar"
+            >
+              <Share2 size={16} />
+            </button>
+          )}
+
           <button 
             onClick={onOpenRules}
             className="md:flex items-center gap-1 text-xs font-bold text-white bg-white/10 hover:bg-white/20 px-3 py-2 rounded uppercase tracking-wide border border-white/10 transition-colors"
@@ -1240,8 +1253,8 @@ function ReportView({ championship, onUpdateReport, isReadOnly }) {
 
 function MatchSearch({ value, onChange }) {
   return (
-    <div className="mb-4 sticky top-0 z-20 bg-[#F8FAFC] pb-2 print:hidden flex gap-2">
-      <div className="relative flex-1">
+    <div className="mb-4 sticky top-0 z-20 bg-[#F8FAFC] pb-2 print:hidden">
+      <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Search size={16} className="text-slate-400" />
         </div>
@@ -1899,6 +1912,7 @@ export default function App() {
 
       {view === 'details' && selectedChampionship && (
         <div className="fixed inset-0 bg-slate-100 z-20 overflow-hidden flex flex-col animate-in fade-in duration-300 print:relative print:inset-auto print:bg-white print:overflow-visible print:h-auto">
+          {/* Header - Hidden on Print */}
           <Header 
             user={user} 
             setView={setView} 
@@ -1908,6 +1922,7 @@ export default function App() {
             onFinish={() => setFinishModal({ isOpen: true, id: selectedChampionship.id })}
             isLocked={isLocked}
             onToggleLock={() => setIsLocked(!isLocked)}
+            onShare={() => setShareModal({ isOpen: true, name: selectedChampionship.name })}
           />
 
           <div className="bg-white border-b px-2 flex gap-4 overflow-x-auto shrink-0 shadow-sm print:hidden">
@@ -1968,6 +1983,7 @@ export default function App() {
         </div>
       )}
 
+      {/* Modals */}
       <ConfirmModal 
         isOpen={deleteModal.isOpen}
         onClose={() => setDeleteModal({ isOpen: false, id: null })}
